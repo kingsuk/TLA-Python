@@ -8,7 +8,7 @@ def FindServerAndRunScript(serverName):
 
     if serverName == "linux": 
 
-        hostname = "13.68.228.184"
+        hostname = "40.114.70.147"
         username = "acn_root"
         password = "Acn_root1234"
         cmd = 'sh /usr/local/scripts/unix_04_automation_local/fs_actual_percentage.sh /data'

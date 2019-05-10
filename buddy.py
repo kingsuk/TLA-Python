@@ -5,7 +5,7 @@ import GoogleSpeechToText as GSTT
 import config
 import CpuUtilizationDialog as CpuDialog
 import FileUsageDialog as FUD
-import unix04 as unix04
+import Unix04Dialog as unix04
 
 # def WriteEmailParser(output):
 #     entities = output['entities']
