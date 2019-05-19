@@ -4,7 +4,7 @@ import Helper.luis as luis
 import ScriptExecutionHelper as SEHelper
 
 FSActualPercentageUsageScript = "sh /usr/local/scripts/unix_04_automation_local/fs_actual_percentage.sh "
-FSDesciptionDialog = "By optimizing the file system, I will archive old log files and notify the concern application owner with the big file list responsible for high utilization. "
+FSDesciptionDialog = "By optimizing the file system, I will archive old log files and notify the concern application owner. "
 
 FSOptimizationScript = "sh /usr/local/scripts/unix_04_automation_local/fs_extension_deletion_opti.sh 60 "
 FSExtensionDialog = "You can extend the file system to bring down the utilization. Please note once file space is extended can't be reverted."
@@ -15,7 +15,8 @@ fileSystemTypeList = {
     "root" : "/",
     "data" : "/data",
     "oracle data" : "/oradata",
-    "route" : "/"
+    "route" : "/",
+    "oradata": "/oradata"
 }
 
 Confirmation = {
@@ -28,7 +29,7 @@ Confirmation = {
 }
 
 def ExecuteScriptToServer(cmd):
-    hostname = "40.76.45.125"
+    hostname = "104.41.150.81"
     username = "acn_root"
     password = "Acn_root1234"
     cmd = cmd
@@ -57,7 +58,7 @@ def ExtensionConfirmation(FileSystemTypeInput):
 
             else:
                 print("okay")
-                winspeech.say_wait("okay")
+                winspeech.say_wait("okay, Connection with the server is closed.")
         else:
             print(f"{optimizationReply} is an invalid choice.")
             winspeech.say_wait(f"{optimizationReply} is an invalid choice.")
@@ -84,7 +85,7 @@ def OptimaizationConfirmation(FileSystemTypeInput):
 
             else:
                 print("okay")
-                winspeech.say_wait("okay")
+                winspeech.say_wait("okay, Connection with the server is closed.")
         else:
             print(f"{optimizationReply} is an invalid choice.")
             winspeech.say_wait(f"{optimizationReply} is an invalid choice.")
@@ -99,9 +100,36 @@ def StartWorkFlowForLinux():
         FileSystemTypeInput = AskForInput("please specify the file system you want to optimize? Root, Data or Oracle Data")
 
         if FileSystemTypeInput in fileSystemTypeList:
-            currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
             print("Please wait.")
             winspeech.say_wait("Please wait.")
+
+            currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
+            print(currentFileSystemUsage)
+            winspeech.say_wait(currentFileSystemUsage)
+
+            print(FSDesciptionDialog)
+            winspeech.say_wait(FSDesciptionDialog)
+
+            OptimaizationConfirmation(FileSystemTypeInput)
+
+
+        else:
+            print(f"{FileSystemTypeInput} is an invalid choice.")
+            winspeech.say_wait(f"{FileSystemTypeInput} is an invalid choice.")
+            StartWorkFlowForLinux()
+    except Exception as e:
+        print("Error in StartWorkFlowForLinux"+str(e))
+
+def StartWorkFlowForLinuxWithoutFileSystemName(FileSystemName):
+    
+    try:
+        FileSystemTypeInput = FileSystemName
+
+        if FileSystemTypeInput in fileSystemTypeList:
+            print("Please wait.")
+            winspeech.say_wait("Please wait.")
+
+            currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
             print(currentFileSystemUsage)
             winspeech.say_wait(currentFileSystemUsage)
 
@@ -149,7 +177,7 @@ def RunUnix04(output):
             speechResult = GSTT.getSpeechToText()
             print(output["query"])
             luisOutput = luis.AnalyseIntent(str(output['query'])+" of "+speechResult)
-            FindFileSystemUsage(luisOutput)
+            FindServer(luisOutput)
 
     except Exception as e:
         print("Error in FileSystemUsageDialog "+str(e))

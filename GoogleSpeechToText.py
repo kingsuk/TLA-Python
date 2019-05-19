@@ -4,7 +4,7 @@ r = sr.Recognizer()
 s = sr.Microphone()
 
 def getSpeechToText():
-    
+    input(":")
     with s as source:
         #print("Please wait. Calibrating microphone...")
         # listen for 1 second and create the ambient noise energy level

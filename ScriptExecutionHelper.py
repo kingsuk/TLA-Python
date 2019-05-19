@@ -1,6 +1,8 @@
 import paramiko
 import winspeech
 
+onceConnectionDone = False
+
 def ExecuteLinuxScript(hostname,username,password,cmd):
     hostname = hostname
     username = username
@@ -12,9 +14,13 @@ def ExecuteLinuxScript(hostname,username,password,cmd):
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(hostname,username=username,password=password)
         print("Connected to %s" % hostname)
-        #winspeech.say_wait("Connection with server is successful")
+        global onceConnectionDone
+        if onceConnectionDone == False:
+            winspeech.say_wait("Connection with server is successful")
+            onceConnectionDone = True
     except paramiko.AuthenticationException:
-        return "Failed to connect to %s due to wrong username/password" %hostname
+        print("Failed to connect to %s due to wrong username/password" %hostname)
+        winspeech.say_wait("Failed to connect to %s due to wrong username/password" %hostname)
         exit(1)
     except Exception as e:
         print("error in ExecuteLinuxScript"+str(e))    
@@ -30,3 +36,5 @@ def ExecuteLinuxScript(hostname,username,password,cmd):
     final_output = str(out)+str(err)
     #print(final_output)
     return final_output
+
+#ExecuteLinuxScript("52.170.81.217","Buddy","Walnutbird1$","dir")

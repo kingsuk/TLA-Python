@@ -6,20 +6,11 @@ import config
 import CpuUtilizationDialog as CpuDialog
 import FileUsageDialog as FUD
 import Unix04Dialog as unix04
+import CognitiveFace.FaceDetectAndLogin as FaceLogin
+import ReadSnowDialog as ReadSnow
+import WriteToFile as WTF
 
-# def WriteEmailParser(output):
-#     entities = output['entities']
-#     recipientNameInput = ""
-#     if len(entities) > 0:
-#         entity = entities[0]["entity"].lower()
-#         recipientNameInput = entity
-#     else:
-#         print("Please provide the recipient name: ")
-#         winspeech.say("Please provide the recipient name: ")
-#         recipientNameInput = input(" : ")
-#     OF.CreateMail("","",recipientNameInput)
-
-
+LoginSuccess = False
 
 def ParseIntent(output):
 
@@ -35,6 +26,8 @@ def ParseIntent(output):
             FUD.FindFileSystemUsage(output)
         elif topScoringIntent == "Unix04":
             unix04.RunUnix04(output)
+        elif topScoringIntent == "ReadSnow":
+            ReadSnow.ReadSnow(output)
 
         # if topScoringIntent=="openApplication":
         #     AHD.OpenApplicationParser(output)
@@ -56,7 +49,23 @@ def ParseIntent(output):
     except Exception as e:
         print("Error in intent parsing "+str(e))
 
-while True:
+authenticationOutput = FaceLogin.CaptureFaceAndStartRecognize()
+
+if authenticationOutput == None:
+    sayString = f"Authentication failed."
+else:
+    sayString = f"Authentication successful. Welcome {authenticationOutput}, How can I help you today."
+    LoginSuccess = True
+    WTF.OpenUiApplication()
+
+print(sayString)
+winspeech.say_wait(sayString)
+
+
+while LoginSuccess:
+    
+    WTF.WriteToCurrentJson("How can I help you?","",[])
+    
     if config.voiceEnable == True:
         speechResult = GSTT.getSpeechToText()
     else:
