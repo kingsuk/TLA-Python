@@ -1,5 +1,6 @@
 import paramiko
-import winspeech
+import CustomSpeech as winspeech
+import WriteToFile as WTF
 
 onceConnectionDone = False
 
@@ -17,6 +18,7 @@ def ExecuteLinuxScript(hostname,username,password,cmd):
         global onceConnectionDone
         if onceConnectionDone == False:
             winspeech.say_wait("Connection with server is successful")
+            WTF.ChangeLogOnly(f"Connection to {hostname} is successful")
             onceConnectionDone = True
     except paramiko.AuthenticationException:
         print("Failed to connect to %s due to wrong username/password" %hostname)
@@ -35,6 +37,8 @@ def ExecuteLinuxScript(hostname,username,password,cmd):
     out = ''.join(stdout.readlines())
     final_output = str(out)+str(err)
     #print(final_output)
+    
+    WTF.AppendStringToFile(final_output+"\n","ScriptOutputLog.txt")
     return final_output
 
 #ExecuteLinuxScript("52.170.81.217","Buddy","Walnutbird1$","dir")

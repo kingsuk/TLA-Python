@@ -1,5 +1,5 @@
 import Helper.luis as luis
-import winspeech
+import CustomSpeech as winspeech
 import speech_recognition as sr
 import GoogleSpeechToText as GSTT
 import config
@@ -49,19 +49,27 @@ def ParseIntent(output):
     except Exception as e:
         print("Error in intent parsing "+str(e))
 
-authenticationOutput = FaceLogin.CaptureFaceAndStartRecognize()
+# authenticationOutput = FaceLogin.CaptureFaceAndStartRecognize()
 
-if authenticationOutput == None:
-    sayString = f"Authentication failed."
-else:
-    sayString = f"Authentication successful. Welcome {authenticationOutput}, How can I help you today."
-    LoginSuccess = True
-    WTF.OpenUiApplication()
+# if authenticationOutput == None:
+#     sayString = f"Authentication failed."
+#     print(sayString)
+#     winspeech.say_wait(sayString)
+# else:
+#     sayString = f"Authentication successful. Welcome {authenticationOutput}."
+#     LoginSuccess = True
+#     winspeech.say_wait(sayString)
+#     winspeech.say_wait("Please wait")
+#     WTF.OpenUiApplication()
+#     print(sayString)
+#     WTF.ChangeLogOnly(sayString)
+#     winspeech.say_wait("How can I help you today")
+    
 
-print(sayString)
-winspeech.say_wait(sayString)
 
-
+LoginSuccess = True
+WTF.OpenUiApplication()
+winspeech.say_wait("Hi I am Buddy, How can I help you today")
 while LoginSuccess:
     
     WTF.WriteToCurrentJson("How can I help you?","",[])

@@ -1,5 +1,5 @@
 import ScriptExecutionHelper as SEHelper
-import winspeech
+import CustomSpeech as winspeech
 import GoogleSpeechToText as GSTT
 import Helper.luis as luis
 

@@ -1,7 +1,10 @@
-import winspeech
+import CustomSpeech as winspeech
 import GoogleSpeechToText as GSTT
 import Helper.luis as luis
 import ScriptExecutionHelper as SEHelper
+import OutputHelper as OH
+import WriteToFile as WTF
+
 
 FSActualPercentageUsageScript = "sh /usr/local/scripts/unix_04_automation_local/fs_actual_percentage.sh "
 FSDesciptionDialog = "By optimizing the file system, I will archive old log files and notify the concern application owner. "
@@ -37,15 +40,9 @@ def ExecuteScriptToServer(cmd):
     returnValue = SEHelper.ExecuteLinuxScript(hostname,username,password,cmd)
     return returnValue
 
-def AskForInput(message):
-    print(message)
-    winspeech.say_wait(message)
-    userInput = GSTT.getSpeechToText().lower()
-    return userInput
-
 def ExtensionConfirmation(FileSystemTypeInput):
     try:
-        optimizationReply = AskForInput(f"Are you sure, you want to approve the {fileSystemTypeList[FileSystemTypeInput]} extension action?")
+        optimizationReply = OH.AskForInput(f"Are you sure, you want to approve the {fileSystemTypeList[FileSystemTypeInput]} extension action?")
 
         if optimizationReply in Confirmation:
             if Confirmation[optimizationReply]:
@@ -53,12 +50,14 @@ def ExtensionConfirmation(FileSystemTypeInput):
                 winspeech.say_wait("Please wait.")
                 print(FSExtensionScript+fileSystemTypeList[FileSystemTypeInput])
                 afterOptimizaResult = ExecuteScriptToServer(FSExtensionScript+fileSystemTypeList[FileSystemTypeInput])
+                WTF.ChangeLogOnly(afterOptimizaResult)
                 print(afterOptimizaResult)
                 winspeech.say_wait(afterOptimizaResult)
 
             else:
                 print("okay")
                 winspeech.say_wait("okay, Connection with the server is closed.")
+                WTF.ChangeLogOnly("Connection with the server is closed.")
         else:
             print(f"{optimizationReply} is an invalid choice.")
             winspeech.say_wait(f"{optimizationReply} is an invalid choice.")
@@ -68,22 +67,25 @@ def ExtensionConfirmation(FileSystemTypeInput):
 
 def OptimaizationConfirmation(FileSystemTypeInput):
     try:
-        optimizationReply = AskForInput(f"Are you sure, you want to optimize the {fileSystemTypeList[FileSystemTypeInput]} file system?")
+        optimizationReply = OH.AskForInput(f"Are you sure, you want to optimize the {fileSystemTypeList[FileSystemTypeInput]} file system?")
         if optimizationReply in Confirmation:
             if Confirmation[optimizationReply]:
                 print("Please wait.")
                 winspeech.say_wait("Please wait.")
                 print(FSOptimizationScript+fileSystemTypeList[FileSystemTypeInput])
                 afterOptimizaResult = ExecuteScriptToServer(FSOptimizationScript+fileSystemTypeList[FileSystemTypeInput])
+                WTF.ChangeLogOnly(afterOptimizaResult)
                 print(afterOptimizaResult)
                 winspeech.say_wait(afterOptimizaResult)
 
                 if fileSystemTypeList[FileSystemTypeInput] != fileSystemTypeList["root"]:
+                    WTF.ChangeLogOnly(FSExtensionDialog)
                     print(FSExtensionDialog)
                     winspeech.say_wait(FSExtensionDialog)
                     ExtensionConfirmation(FileSystemTypeInput)
 
             else:
+                WTF.ChangeLogOnly("Connection with the server is closed.")
                 print("okay")
                 winspeech.say_wait("okay, Connection with the server is closed.")
         else:
@@ -97,18 +99,22 @@ def OptimaizationConfirmation(FileSystemTypeInput):
 def StartWorkFlowForLinux():
     
     try:
-        FileSystemTypeInput = AskForInput("please specify the file system you want to optimize? Root, Data or Oracle Data")
+        FileSystemTypeInput = OH.AskForInput("please specify the file system you want to optimize? Root, Data or Oracle Data")
 
         if FileSystemTypeInput in fileSystemTypeList:
             print("Please wait.")
             winspeech.say_wait("Please wait.")
 
             currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
+            WTF.ChangeLogOnly(currentFileSystemUsage)
+            WTF.ChangeLogOnly(FSDesciptionDialog)
             print(currentFileSystemUsage)
             winspeech.say_wait(currentFileSystemUsage)
 
+
             print(FSDesciptionDialog)
             winspeech.say_wait(FSDesciptionDialog)
+            
 
             OptimaizationConfirmation(FileSystemTypeInput)
 
@@ -130,11 +136,14 @@ def StartWorkFlowForLinuxWithoutFileSystemName(FileSystemName):
             winspeech.say_wait("Please wait.")
 
             currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
+            WTF.ChangeLogOnly(currentFileSystemUsage)
+            WTF.ChangeLogOnly(FSDesciptionDialog)
             print(currentFileSystemUsage)
             winspeech.say_wait(currentFileSystemUsage)
 
             print(FSDesciptionDialog)
             winspeech.say_wait(FSDesciptionDialog)
+            
 
             OptimaizationConfirmation(FileSystemTypeInput)
 
