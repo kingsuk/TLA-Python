@@ -1,9 +1,11 @@
 import speech_recognition as sr
+import WriteToFile as WTF
 
 r = sr.Recognizer()
 s = sr.Microphone()
 
 def getSpeechToText():
+    WTF.ListnerIndicator(True)
     input(":")
     with s as source:
         #print("Please wait. Calibrating microphone...")
@@ -19,6 +21,7 @@ def getSpeechToText():
         # instead of `r.recognize_google(audio)`
         result = r.recognize_google(audio)
         print(result)
+        WTF.ListnerIndicator(False)
         return result.lower()
         
     except sr.UnknownValueError:

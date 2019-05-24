@@ -34,6 +34,7 @@ def WriteToCurrentJson(headerText,dataTypeText,data):
     totalJsonData["currentHeader"] = headerList
     totalJsonData["currentData"] = data
     totalJsonData["currentLog"] = []
+    totalJsonData['showListningIndicator'] = [False]
 
     WriteToFile(totalJsonData,"currentdata.json")
 
@@ -71,3 +72,9 @@ def HardWriteLogOnly(log):
         data = json.load(json_file)
         data['currentLog'] = [log]
         WriteToFile(data,"currentdata.json")
+
+def ListnerIndicator(listning):
+        with open('currentdata.json') as json_file:  
+                data = json.load(json_file)
+                data['showListningIndicator'] = [listning]
+                WriteToFile(data,"currentdata.json")

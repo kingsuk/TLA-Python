@@ -1,7 +1,2 @@
 Current file-system utilization of /oradata is:  97%
 
-
-After optimization the current utilization of /oradata is   84%
-
-After optimization the current utilization of /oradata is   59%
-
