@@ -25,11 +25,11 @@ Confirmation = {
 def GetIncidentsFromShow():
     url = f"{config.ServiceNowBaseUrl}api/now/table/incident"
 
-    querystring = {"active":"True","assigned_to":"sla.admin","state":"2"}
+    querystring = {"active":"True","assigned_to":config.ServiceNowToken,"state":"2"}
 
     headers = {
         'accept': "application/json",
-        'authorization': "Basic YWRtaW46V2FsbnV0YmlyZDEk",
+        'authorization': "Basic "+config.ServiceNowToken,
         }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
@@ -48,7 +48,7 @@ def MarkIncidentAsResoved(incident):
     }
     headers = {
         'accept': "application/json",
-        'authorization': "Basic YWRtaW46V2FsbnV0YmlyZDEk",
+        'authorization': "Basic "+config.ServiceNowToken,
         'content-type': "application/json",
         }
 
