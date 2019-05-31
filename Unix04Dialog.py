@@ -4,7 +4,8 @@ import Helper.luis as luis
 import ScriptExecutionHelper as SEHelper
 import OutputHelper as OH
 import WriteToFile as WTF
-
+import config
+import json
 
 FSActualPercentageUsageScript = "sh /usr/local/scripts/unix_04_automation_local/fs_actual_percentage.sh "
 FSDesciptionDialog = "By optimizing the file system, I will archive old log files and notify the concern application owner. "
@@ -32,9 +33,9 @@ Confirmation = {
 }
 
 def ExecuteScriptToServer(cmd):
-    hostname = "104.41.150.81"
-    username = "acn_root"
-    password = "Acn_root1234"
+    hostname = config.LinuxServerIP
+    username = config.LinuxUsername
+    password = config.LinuxPassword
     cmd = cmd
 
     returnValue = SEHelper.ExecuteLinuxScript(hostname,username,password,cmd)
@@ -50,9 +51,12 @@ def ExtensionConfirmation(FileSystemTypeInput):
                 winspeech.say_wait("Please wait.")
                 print(FSExtensionScript+fileSystemTypeList[FileSystemTypeInput])
                 afterOptimizaResult = ExecuteScriptToServer(FSExtensionScript+fileSystemTypeList[FileSystemTypeInput])
-                WTF.ChangeLogOnly(afterOptimizaResult)
+
+                afterOptimizaResultJSON = json.loads(afterOptimizaResult)
+                WTF.ChangeLogOnly(afterOptimizaResultJSON["value"])
+                WTF.WriteTailLog(afterOptimizaResultJSON["log_value"])
                 print(afterOptimizaResult)
-                winspeech.say_wait(afterOptimizaResult)
+                winspeech.say_wait(afterOptimizaResultJSON["value"])
 
             else:
                 print("okay")
@@ -74,9 +78,12 @@ def OptimaizationConfirmation(FileSystemTypeInput):
                 winspeech.say_wait("Please wait.")
                 print(FSOptimizationScript+fileSystemTypeList[FileSystemTypeInput])
                 afterOptimizaResult = ExecuteScriptToServer(FSOptimizationScript+fileSystemTypeList[FileSystemTypeInput])
-                WTF.ChangeLogOnly(afterOptimizaResult)
+
+                afterOptimizaResultJSON = json.loads(afterOptimizaResult)
+                WTF.ChangeLogOnly(afterOptimizaResultJSON["value"])
+
                 print(afterOptimizaResult)
-                winspeech.say_wait(afterOptimizaResult)
+                winspeech.say_wait(afterOptimizaResultJSON["value"])
 
                 if fileSystemTypeList[FileSystemTypeInput] != fileSystemTypeList["root"]:
                     WTF.ChangeLogOnly(FSExtensionDialog)
@@ -136,10 +143,12 @@ def StartWorkFlowForLinuxWithoutFileSystemName(FileSystemName):
             winspeech.say_wait("Please wait.")
 
             currentFileSystemUsage = ExecuteScriptToServer(FSActualPercentageUsageScript+fileSystemTypeList[FileSystemTypeInput])
-            WTF.ChangeLogOnly(currentFileSystemUsage)
+
+            currentFileSystemUsageJSON = json.loads(currentFileSystemUsage)
+            WTF.ChangeLogOnly(currentFileSystemUsageJSON["value"])
             WTF.ChangeLogOnly(FSDesciptionDialog)
             print(currentFileSystemUsage)
-            winspeech.say_wait(currentFileSystemUsage)
+            winspeech.say_wait(currentFileSystemUsageJSON["value"])
 
             print(FSDesciptionDialog)
             winspeech.say_wait(FSDesciptionDialog)
@@ -154,7 +163,7 @@ def StartWorkFlowForLinuxWithoutFileSystemName(FileSystemName):
             StartWorkFlowForLinux()
     except Exception as e:
         print("Error in StartWorkFlowForLinux"+str(e))
-
+#StartWorkFlowForLinuxWithoutFileSystemName("oradata")
 def FindServer(serverName):
 
     if serverName == "linux": 

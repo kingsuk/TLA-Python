@@ -49,27 +49,27 @@ def ParseIntent(output):
     except Exception as e:
         print("Error in intent parsing "+str(e))
 
-# authenticationOutput = FaceLogin.CaptureFaceAndStartRecognize()
+authenticationOutput = FaceLogin.CaptureFaceAndStartRecognize()
 
-# if authenticationOutput == None:
-#     sayString = f"Authentication failed."
-#     print(sayString)
-#     winspeech.say_wait(sayString)
-# else:
-#     sayString = f"Authentication successful. Welcome {authenticationOutput}."
-#     LoginSuccess = True
-#     winspeech.say_wait(sayString)
-#     winspeech.say_wait("Please wait")
-#     WTF.OpenUiApplication()
-#     print(sayString)
-#     WTF.ChangeLogOnly(sayString)
-#     winspeech.say_wait("How can I help you today")
+if authenticationOutput == None:
+    sayString = f"Authentication failed."
+    print(sayString)
+    winspeech.say_wait(sayString)
+else:
+    sayString = f"Authentication successful. Welcome {authenticationOutput}."
+    LoginSuccess = True
+    winspeech.say_wait(sayString)
+    winspeech.say_wait("Please wait")
+    WTF.OpenUiApplication()
+    print(sayString)
+    WTF.ChangeLogOnly(sayString)
+    winspeech.say_wait("How can I help you today")
     
 
 
-LoginSuccess = True
-WTF.OpenUiApplication()
-winspeech.say_wait("Hi I am Buddy, How can I help you today")
+#LoginSuccess = True
+#WTF.OpenUiApplication()
+#winspeech.say_wait("Hi I am Buddy, How can I help you today")
 while LoginSuccess:
     
     WTF.WriteToCurrentJson("How can I help you?","",[])

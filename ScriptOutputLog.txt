@@ -1,2 +1,7 @@
-Current file-system utilization of /oradata is:  97%
+{"type" : "plainText", "value": "Current file-system utilization of /oradata is: 59%"}
+
+
+{"type" : "plainText", "value": "After optimization the current utilization of /oradata is 59%"}
+
+{"type": "mixed", "value": "After optimization the current utilization of /oradata is 59%", "log_value" : " Current date and time is: 31052019-13:13 Incident number: INC123456 Server Name: LinuxForUNX04 FSNAME: /oradata THRESHOLD VALUE: 60 CURRENT_FS_UTIL: Filesystem 1K-blocks Used Available Use% Mounted on /dev/mapper/ora_vg-ora_lv 5824080 3218604 2307784 59% /oradata /oradata filesystem utilization is below threshold now"}
 

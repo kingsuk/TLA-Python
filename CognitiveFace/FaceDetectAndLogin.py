@@ -55,7 +55,8 @@ def CaptureFaceAndStartRecognize():
                     return userName
                 else:
                     faceCounter = 0
-                    FaceResultMessage = "Cannot Recognize you! Trying Again."
+                    FaceResultMessage = "Authentication Failed ! Trying Again."
+                    winspeech.say("Authentication Failed.")
                     messageTextColor = (0,0,255)
             elif faceCounter > (faceCounterThreshhold-5):
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)

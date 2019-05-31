@@ -6,6 +6,7 @@ import inflect
 import WriteToFile as WTF
 import OutputHelper as OH
 import json
+import config
 
 p = inflect.engine()
 
@@ -22,7 +23,7 @@ Confirmation = {
 }
 
 def GetIncidentsFromShow():
-    url = "https://dev48697.service-now.com/api/now/table/incident"
+    url = f"{config.ServiceNowBaseUrl}api/now/table/incident"
 
     querystring = {"active":"True","assigned_to":"sla.admin","state":"2"}
 
@@ -36,7 +37,7 @@ def GetIncidentsFromShow():
     return response.json()['result']
 
 def MarkIncidentAsResoved(incident):
-    url = f"https://dev48697.service-now.com/api/now/table/incident/{incident['sys_id']}"
+    url = f"{config.ServiceNowBaseUrl}api/now/table/incident/{incident['sys_id']}"
 
     workLog = WTF.ReadStringFromFile("ScriptOutputLog.txt")
 
